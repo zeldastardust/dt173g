@@ -1,16 +1,16 @@
 <?php
-class Work{
+class Study{
   
     // database connection and table name
     private $conn;
-    private $table_name = "work";
+    private $table_name = "study";
   
     // object properties
     public $id;
-    public $company;
-    public $title;
-    public $startwork;
-    public $stopwork;
+    public $place;
+    public $coursename;
+    public $startedu;
+    public $stopedu;
     
   
     // constructor with $db as database connection
@@ -18,7 +18,7 @@ class Work{
         $this->conn = $db;
     }
 
-    // read work
+    // read studies
  function read(){
   
     // select all query
@@ -41,23 +41,23 @@ function create(){
     $query = "INSERT INTO
                 " . $this->table_name . "
             SET
-                company=:company, title=:title, startwork=:startwork, stopwork=:stopwork";
+                place=:place, coursename=:coursename, startedu=:startedu, stopedu=:stopedu";
   
     // prepare query
     $stmt = $this->conn->prepare($query);
   
     // sanitize
-    $this->company=htmlspecialchars(strip_tags($this->company));
-    $this->title=htmlspecialchars(strip_tags($this->title));
-    $this->startwork=htmlspecialchars(strip_tags($this->startwork));
-    $this->stopwork=htmlspecialchars(strip_tags($this->stopwork));
+    $this->place=htmlspecialchars(strip_tags($this->place));
+    $this->coursename=htmlspecialchars(strip_tags($this->coursename));
+    $this->startedu=htmlspecialchars(strip_tags($this->startedu));
+    $this->stopedu=htmlspecialchars(strip_tags($this->stopedu));
     
   
     // bind values
-    $stmt->bindParam(":company", $this->company);
-    $stmt->bindParam(":title", $this->title);
-    $stmt->bindParam(":startwork", $this->startwork);
-    $stmt->bindParam(":stopwork", $this->stopwork);
+    $stmt->bindParam(":place", $this->place);
+    $stmt->bindParam(":coursename", $this->coursename);
+    $stmt->bindParam(":startedu", $this->startedu);
+    $stmt->bindParam(":stopedu", $this->stopedu);
     
   
     // execute query
@@ -68,6 +68,7 @@ function create(){
     return false;
       
 }
+
 function readOne($id){
   
     // query to read single record
@@ -83,7 +84,7 @@ function readOne($id){
     // prepare query statement
     $stmt = $this->conn->prepare( $query );
   
-    // bind id of work to be updated
+    // bind id of studies to be updated
     $stmt->bindParam(1, $this->id);
   
     // execute query
@@ -93,22 +94,22 @@ function readOne($id){
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
   
     // set values to object properties
-    $this->company = $row['company'];
-    $this->title = $row['title'];
-    $this->startwork = $row['startwork'];
-    $this->stopwork = $row['stopwork'];
+    $this->place = $row['place'];
+    $this->coursename = $row['coursename'];
+    $this->startedu = $row['startedu'];
+    $this->stopedu = $row['stopedu'];
 }
-// update the work
+// update the study
 function update(){
   
     // update query
     $query = "UPDATE
                 " . $this->table_name . "
             SET
-                company = :company,
-                title = :title,
-                startwork = :startwork,
-                stopwork = :stopwork
+                place = :place,
+                coursename = :coursename,
+                startedu = :startedu,
+                stopedu = :stopedu
             WHERE
                 id = :id";
   
@@ -116,17 +117,17 @@ function update(){
     $stmt = $this->conn->prepare($query);
   
     // sanitize
-    $this->company=htmlspecialchars(strip_tags($this->company));
-    $this->title=htmlspecialchars(strip_tags($this->title));
-    $this->startwork=htmlspecialchars(strip_tags($this->startwork));
-    $this->stopwork=htmlspecialchars(strip_tags($this->stopwork));
+    $this->place=htmlspecialchars(strip_tags($this->place));
+    $this->coursename=htmlspecialchars(strip_tags($this->coursename));
+    $this->startedu=htmlspecialchars(strip_tags($this->startedu));
+    $this->stopedu=htmlspecialchars(strip_tags($this->stopedu));
     $this->id=htmlspecialchars(strip_tags($this->id));
   
     // bind new values
-    $stmt->bindParam(':company', $this->company);
-    $stmt->bindParam(':title', $this->title);
-    $stmt->bindParam(':startwork', $this->startwork);
-    $stmt->bindParam(':stopwork', $this->stopwork);
+    $stmt->bindParam(':place', $this->place);
+    $stmt->bindParam(':coursename', $this->coursename);
+    $stmt->bindParam(':startedu', $this->startedu);
+    $stmt->bindParam(':stopedu', $this->stopedu);
     $stmt->bindParam(':id', $this->id);
   
     // execute the query
@@ -136,7 +137,7 @@ function update(){
   
     return false;
 }
-// delete the work
+// delete the study
 function delete(){
   
     // delete query

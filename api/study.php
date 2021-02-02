@@ -8,14 +8,14 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
   
 // include database and object files
 include_once './config/database.php';
-include_once './objects/Work.php';
+include_once './objects/Study.php';
   
-// instantiate database and work object
+// instantiate database and study object
 $database = new Database();
 $db = $database->getConnection();
   
 // initialize object
-$work = new Work($db);
+$study = new Study($db);
 
 $method = $_SERVER['REQUEST_METHOD'];
 
@@ -34,58 +34,58 @@ if (isset($_GET['id'])) {
 switch ($method) {  
     case 'GET': 
         if(!isset($id)) {
-        // query work
-        $stmt = $work->read();
+        // query study
+        $stmt = $study->read();
         $num = $stmt->rowCount();
   
         // check if more than 0 record found
         if($num>0){  
-            // work array
-            $work_arr=array();
-            $work_arr["records"]=array(); 
+            // study array
+            $study_arr=array();
+            $study_arr["records"]=array(); 
             // retrieve our table contents
                 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
                 // extract row
                 // this will make $row['name'] to
                 // just $name only
                 extract($row); 
-                $work_item=array(
+                $study_item=array(
                     "id" => $id,
-                    "company" => $company,
-                    "title" => $title,
-                    "startwork" => $startwork,
-                    "stopwork" => $stopwork
+                    "place" => $place,
+                    "coursename" => $coursename,
+                    "startedu" => $startedu,
+                    "stopedu" => $stopedu
                     
                 );  
-                array_push($work_arr["records"], $work_item);
+                array_push($study_arr["records"], $study_item);
                 }
             // set response code - 200 OK
             http_response_code(200); 
             // show work data in json format
-            echo json_encode($work_arr);
+            echo json_encode($study_arr);
             }  
         else{  
             // set response code - 404 Not found
             http_response_code(404);
     
-            // tell the user no work found
+            // tell the user no studies found
             echo json_encode(
-            array("message" => "No works found.")
+            array("message" => "No studies found.")
             );
             } 
        }else{
             // set ID property of record to read
             //$work->id = isset($_GET['id']) ? $_GET['id'] : die();
-            $work->readOne($id);
+            $study->readOne($id);
   
-            if($work->company!=null){
+            if($study->place!=null){
                 // create array
-                $work_arr = array(
-                    "id" =>  $work->id,
-                    "company" => $work->company,
-                    "title" => $work->title,
-                    "startwork" => $work->startwork,
-                    "stopwork" => $work->stopwork
+                $study_arr = array(
+                    "id" =>  $study->id,
+                    "place" => $study->place,
+                    "coursename" => $study->coursename,
+                    "startedu" => $study->startedu,
+                    "stopedu" => $study->stopedu
                   
                 );
             
@@ -93,15 +93,15 @@ switch ($method) {
                 http_response_code(200);
             
                 // make it json format
-                echo json_encode($work_arr);
+                echo json_encode($study_arr);
             }
             
             else{
                 // set response code - 404 Not found
                 http_response_code(404);
             
-                // tell the user work does not exist
-                echo json_encode(array("message" => "Work does not exist."));
+                // tell the user study does not exist
+                echo json_encode(array("message" => "study does not exist."));
             }
                        // echo " id satt";
         }
@@ -113,37 +113,37 @@ switch ($method) {
   
     // make sure data is not empty
     if(
-    !empty($data->company) &&
-    !empty($data->title) &&
-    !empty($data->startwork) &&
-    !empty($data->stopwork)
+    !empty($data->place) &&
+    !empty($data->coursename) &&
+    !empty($data->startedu) &&
+    !empty($data->stopedu)
     ){
   
     // set product property values
-    $work->company = $data->company;
-    $work->title = $data->title;
-    $work->startwork = $data->startwork;
-    $work->stopwork = $data->stopwork;
+    $study->place = $data->place;
+    $study->coursename = $data->coursename;
+    $study->startedu = $data->startedu;
+    $study->stopedu = $data->stopedu;
     
   
-    // create the work
-    if($work->create()){
+    // create the study 
+    if($study->create()){
   
         // set response code - 201 created
         http_response_code(201);
   
         // tell the user
-        echo json_encode(array("message" => "Work was created."));
+        echo json_encode(array("message" => "Study was created."));
     }
   
-    // if unable to create the work, tell the user
+    // if unable to create the study, tell the user
     else{
   
         // set response code - 503 service unavailable
         http_response_code(503);
   
         // tell the user
-        echo json_encode(array("message" => "Unable to create work."));
+        echo json_encode(array("message" => "Unable to create study."));
     }
     }
   
@@ -154,69 +154,69 @@ switch ($method) {
     http_response_code(400);
   
     // tell the user
-    echo json_encode(array("message" => "Unable to create work. Data is incomplete."));
+    echo json_encode(array("message" => "Unable to create study. Data is incomplete."));
     }
     break;
 
     case'PUT':
-            // get id of work to be edited
+            // get id of study to be edited
     $data = json_decode(file_get_contents("php://input"));
     
     // set ID property of product to be edited
-    $work->id = $data->id;
+    $study->id = $data->id;
     
     // set product property values
-    $work->company = $data->company;
-    $work->title = $data->title;
-    $work->startwork = $data->startwork;
-    $work->stopwork = $data->stopwork;
+    $study->place = $data->place;
+    $study->coursename = $data->coursename;
+    $study->startedu = $data->startedu;
+    $study->stopedu = $data->stopedu;
     
-    // update work
-    if($work->update()){
+    // update study
+    if($study->update()){
     
         // set response code - 200 ok
         http_response_code(200);
     
         // tell the user
-        echo json_encode(array("message" => "work was updated."));
+        echo json_encode(array("message" => "study was updated."));
     }
     
-    // if unable to update the work, tell the user
+    // if unable to update the study, tell the user
     else{
     
         // set response code - 503 service unavailable
         http_response_code(503);
     
         // tell the user
-        echo json_encode(array("message" => "Unable to update work."));
+        echo json_encode(array("message" => "Unable to update study."));
     }
     break;
 
     case 'DELETE':
-        // get work id
+        // get study id
     $data = json_decode(file_get_contents("php://input"));
     
-    // set work id to be deleted
-    $work->id = $id;
+    // set study id to be deleted
+    $study->id = $id;
     
-    // delete the work
-    if($work->delete()){
+    // delete the study
+    if($study->delete()){
     
         // set response code - 200 ok
         http_response_code(200);
     
         // tell the user
-        echo json_encode(array("message" => "work was deleted."));
+        echo json_encode(array("message" => "study was deleted."));
     }
     
-    // if unable to delete the work
+    // if unable to delete the study
     else{
     
         // set response code - 503 service unavailable
         http_response_code(503);
     
         // tell the user
-        echo json_encode(array("message" => "Unable to delete work."));
+        echo json_encode(array("message" => "Unable to delete study."));
     }
     break;
 
