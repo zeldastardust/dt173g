@@ -119,7 +119,7 @@ switch ($method) {
     !empty($data->stopwork)
     ){
   
-    // set product property values
+    // set work property values
     $work->company = $data->company;
     $work->title = $data->title;
     $work->startwork = $data->startwork;
@@ -162,10 +162,10 @@ switch ($method) {
             // get id of work to be edited
     $data = json_decode(file_get_contents("php://input"));
     
-    // set ID property of product to be edited
+    // set ID property of work to be edited
     $work->id = $data->id;
     
-    // set product property values
+    // set work property values
     $work->company = $data->company;
     $work->title = $data->title;
     $work->startwork = $data->startwork;

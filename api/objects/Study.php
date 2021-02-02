@@ -34,7 +34,7 @@ class Study{
   
     return $stmt;
 }
-// create product
+// create studies
 function create(){
   
     // query to insert record

@@ -34,7 +34,7 @@ class Work{
   
     return $stmt;
 }
-// create product
+// create work
 function create(){
   
     // query to insert record

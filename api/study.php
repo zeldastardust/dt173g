@@ -119,7 +119,7 @@ switch ($method) {
     !empty($data->stopedu)
     ){
   
-    // set product property values
+    // set study property values
     $study->place = $data->place;
     $study->coursename = $data->coursename;
     $study->startedu = $data->startedu;
@@ -162,10 +162,10 @@ switch ($method) {
             // get id of study to be edited
     $data = json_decode(file_get_contents("php://input"));
     
-    // set ID property of product to be edited
+    // set ID property of study to be edited
     $study->id = $data->id;
     
-    // set product property values
+    // set study property values
     $study->place = $data->place;
     $study->coursename = $data->coursename;
     $study->startedu = $data->startedu;
