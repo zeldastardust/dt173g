@@ -3,8 +3,8 @@ class Database{
   
     // specify your own database credentials
     private $host = "localhost";
-    private $db_name = "api_db";
-    private $username = "api_db";
+    private $db_name = "dt173g";
+    private $username = "dt173g";
     private $password = "password";
     public $conn;
   
@@ -21,6 +21,10 @@ class Database{
         }
   
         return $this->conn;
+    }
+    public function close()
+    {
+        $this->conn = null;
     }
 }
 ?>

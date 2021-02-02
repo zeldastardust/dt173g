@@ -8,14 +8,14 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
   
 // include database and object files
 include_once './config/database.php';
-include_once './objects/Product.php';
+include_once './objects/Work.php';
   
-// instantiate database and product object
+// instantiate database and work object
 $database = new Database();
 $db = $database->getConnection();
   
 // initialize object
-$product = new Product($db);
+$work = new Work($db);
 
 $method = $_SERVER['REQUEST_METHOD'];
 
@@ -34,67 +34,66 @@ if (isset($_GET['id'])) {
 switch ($method) {  
     case 'GET': 
         if(!isset($id)) {
-        // query products
-        $stmt = $product->read();
+        // query work
+        $stmt = $work->read();
         $num = $stmt->rowCount();
   
         // check if more than 0 record found
         if($num>0){  
-            // products array
-            $products_arr=array();
-            $products_arr["records"]=array(); 
+            // work array
+            $work_arr=array();
+            $work_arr["records"]=array(); 
             // retrieve our table contents
                 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
                 // extract row
                 // this will make $row['name'] to
                 // just $name only
                 extract($row); 
-                $product_item=array(
+                $work_item=array(
                     "id" => $id,
-                    "name" => $name,
-                    "description" => html_entity_decode($description),
-                    "price" => $price,
-                    "category_id" => $category_id,
-                    "category_name" => $category_name
+                    "company" => $company,
+                    "title" => $title,
+                    "startwork" => $startwork,
+                    "stopwork" => $stopwork
+                    
                 );  
-                array_push($products_arr["records"], $product_item);
+                array_push($work_arr["records"], $work_item);
                 }
             // set response code - 200 OK
             http_response_code(200); 
-            // show products data in json format
-            echo json_encode($products_arr);
+            // show work data in json format
+            echo json_encode($work_arr);
             }  
         else{  
             // set response code - 404 Not found
             http_response_code(404);
     
-            // tell the user no products found
+            // tell the user no work found
             echo json_encode(
-            array("message" => "No products found.")
+            array("message" => "No works found.")
             );
             } 
        }else{
             // set ID property of record to read
-            //$product->id = isset($_GET['id']) ? $_GET['id'] : die();
-            $product->readOne($id);
+            //$work->id = isset($_GET['id']) ? $_GET['id'] : die();
+            $work->readOne($id);
   
-            if($product->name!=null){
+            if($work->company!=null){
                 // create array
-                $product_arr = array(
-                    "id" =>  $product->id,
-                    "name" => $product->name,
-                    "description" => $product->description,
-                    "price" => $product->price,
-                    "category_id" => $product->category_id,
-                    "category_name" => $product->category_name
-            
+                $work_arr = array(
+                    "id" =>  $work->id,
+                    "company" => $work->company,
+                    "title" => $work->title,
+                    "startwork" => $work->startwork,
+                    "stopwork" => $work->stopwork
+                  
                 );
             
                 // set response code - 200 OK
                 http_response_code(200);
             
                 // make it json format
-                echo json_encode($product_arr);
+                echo json_encode($work_arr);
             }
             
             else{
@@ -102,7 +101,7 @@ switch ($method) {
                 http_response_code(404);
             
                 // tell the user product does not exist
-                echo json_encode(array("message" => "Product does not exist."));
+                echo json_encode(array("message" => "Work does not exist."));
             }
                        // echo " id satt";
         }
@@ -114,37 +113,37 @@ switch ($method) {
   
     // make sure data is not empty
     if(
-    !empty($data->name) &&
-    !empty($data->price) &&
-    !empty($data->description) &&
-    !empty($data->category_id)
+    !empty($data->company) &&
+    !empty($data->title) &&
+    !empty($data->startwork) &&
+    !empty($data->stopwork)
     ){
   
     // set product property values
-    $product->name = $data->name;
-    $product->price = $data->price;
-    $product->description = $data->description;
-    $product->category_id = $data->category_id;
-    $product->created = date('Y-m-d H:i:s');
+    $work->company = $data->company;
+    $work->title = $data->title;
+    $work->startwork = $data->startwork;
+    $work->stopwork = $data->stopwork;
+    
   
     // create the product
-    if($product->create()){
+    if($work->create()){
   
         // set response code - 201 created
         http_response_code(201);
   
         // tell the user
-        echo json_encode(array("message" => "Product was created."));
+        echo json_encode(array("message" => "Work was created."));
     }
   
-    // if unable to create the product, tell the user
+    // if unable to create the work, tell the user
     else{
   
         // set response code - 503 service unavailable
         http_response_code(503);
   
         // tell the user
-        echo json_encode(array("message" => "Unable to create product."));
+        echo json_encode(array("message" => "Unable to create work."));
     }
     }
   
@@ -155,69 +154,69 @@ switch ($method) {
     http_response_code(400);
   
     // tell the user
-    echo json_encode(array("message" => "Unable to create product. Data is incomplete."));
+    echo json_encode(array("message" => "Unable to create work. Data is incomplete."));
     }
     break;
 
     case'PUT':
-            // get id of product to be edited
+            // get id of work to be edited
     $data = json_decode(file_get_contents("php://input"));
     
     // set ID property of product to be edited
-    $product->id = $data->id;
+    $work->id = $data->id;
     
     // set product property values
-    $product->name = $data->name;
-    $product->price = $data->price;
-    $product->description = $data->description;
-    $product->category_id = $data->category_id;
+    $work->company = $data->company;
+    $work->title = $data->title;
+    $work->startwork = $data->startwork;
+    $work->stopwork = $data->stopwork;
     
     // update the product
-    if($product->update()){
+    if($work->update()){
     
         // set response code - 200 ok
         http_response_code(200);
     
         // tell the user
-        echo json_encode(array("message" => "Product was updated."));
+        echo json_encode(array("message" => "work was updated."));
     }
     
-    // if unable to update the product, tell the user
+    // if unable to update the work, tell the user
     else{
     
         // set response code - 503 service unavailable
         http_response_code(503);
     
         // tell the user
-        echo json_encode(array("message" => "Unable to update product."));
+        echo json_encode(array("message" => "Unable to update work."));
     }
     break;
 
     case 'DELETE':
-        // get product id
+        // get work id
     $data = json_decode(file_get_contents("php://input"));
     
-    // set product id to be deleted
-    $product->id = $id;
+    // set work id to be deleted
+    $work->id = $id;
     
-    // delete the product
-    if($product->delete()){
+    // delete the work
+    if($work->delete()){
     
         // set response code - 200 ok
         http_response_code(200);
     
         // tell the user
-        echo json_encode(array("message" => "Product was deleted."));
+        echo json_encode(array("message" => "work was deleted."));
     }
     
-    // if unable to delete the product
+    // if unable to delete the work
     else{
     
         // set response code - 503 service unavailable
         http_response_code(503);
     
         // tell the user
-        echo json_encode(array("message" => "Unable to delete product."));
+        echo json_encode(array("message" => "Unable to delete work."));
     }
     break;
 
