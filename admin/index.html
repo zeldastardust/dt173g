@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin</title>
+</head>
+<body>
+    <header>
+        <h1>Admin Portfolio</h1>
+
+    </header>
+
+    <div id="container">
+
+        <section id="worksection">
+    <h2>Arbete</h2>
+    <div id="work"></div>
+    <div id="creatework">
+        <h2>Lägg till arbetsplats</h2>
+        <form id="workform">
+            <label for="company">Arbetsplats</label>
+            <input type="text" name="company" id="company">
+            <br>
+            <label for="title">Titel</label>
+            <input type="text" name="title" id="title">
+            <br>
+            <label for="startwork">Start datum</label>
+            <input type="date" name="startwork" id="startwork">
+            <br>
+            <label for="stopwork">Slut datum</label>
+            <input type="date" name="stopwork" id="stopwork">
+            <br>
+            <input type="submit" value="Lägg till arbetsplats" id="addWork">
+        </form>
+    </div>
+</section><!--end of worksection-->
+
+        <section id="studysection">
+    <h2>Studier</h2>
+<div id="study"></div>
+<div id="createstudy">
+    <h2>Lägg till utbildning</h2>
+    <form id="studyform">
+        <label for="place">Lärosäte</label>
+        <input type="text" name="place" id="place">
+        <br>
+        <label for="coursename">Kurs/utbildning</label>
+        <input type="text" name="coursename" id="coursename">
+        <br>
+        <label for="startedu">Start datum</label>
+        <input type="date" name="startedu" id="startedu">
+        <br>
+        <label for="stopedu">Slut datum</label>
+        <input type="date" name="stopedu" id="stopedu">
+        <br>
+        <input type="submit" value="Lägg till utbildning" id="addStudy">
+    </form>
+</div>
+</section><!--end of studysection-->
+
+<section id="sitessection">
+    <h2>Webbplatser</h2>
+    <div id="sites"></div>
+</section><!--end of sitessection-->
+
+
+
+
+</div><!--end of container-->
+</body>
+<script src="src/js/main.js"></script>
+</html>
