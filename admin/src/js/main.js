@@ -31,6 +31,7 @@ addStudybtn.addEventListener('click', addStudy);
 addSitesbtn.addEventListener('click', addSites);
 
 
+
 //functions
 function getWork(){
     workEl.innerHTML='';
@@ -40,17 +41,28 @@ function getWork(){
         data.records.forEach(work =>{
             workEl.innerHTML +=
             `<div class="work">
-            <p>
-            <b>Arbetsplats:</b> ${work.company}
-            </p>
-            <p>
-            <b>Titel:</b> ${work.title}
-            </p>
-            <p>
-            <b>Period:</b> ${work.startwork}-${work.stopwork}
-            </p>
-            <button id="${work.id}" onClick="deleteWork(${work.id})">Radera</button>
-            </div>`
+            <div class="col-md-8 mt-3">
+        <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Arbetsplats</th>
+                <th scope="col">Titel</th>
+                <th scope="col">Startdatum</th>
+                <th scope="col">Stopdatum</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>${work.company}</td>
+                <td>${work.title}</td>
+                <td>${work.startwork}</td>
+                <td>${work.stopwork}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+    </div>
+     `
            
         })
     })
