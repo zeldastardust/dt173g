@@ -1,218 +1,56 @@
-"use strict"
+const workList = document.querySelector('.work-list');
+let workOutput='';
+const addWorkForm = document.querySelector('.add-work-form');
+const companyValue=document.getElementById('company-value');
+const titleValue=document.getElementById('title-value');
+const startworkValue=document.getElementById('startwork-value');
+const stopworkValue=document.getElementById('stopwork-value');
 
-//variables
-let workEl = document.getElementById("work");
-let studyEl = document.getElementById("study");
-let sitesEl = document.getElementById("sites");
-
-let addWorkbtn= document.getElementById("addWork");
-let companyInput= document.getElementById("company"); 
-let titleInput= document.getElementById("title");
-let startworkInput= document.getElementById("startwork");
-let stopworkInput= document.getElementById("stopwork");
-
-let addStudybtn=document.getElementById("addStudy");
-let placeInput=document.getElementById("place");
-let coursenameInput=document.getElementById("coursename");
-let starteduInput=document.getElementById("startedu");
-let stopeduInput=document.getElementById("stopedu");
-
-let addSitesbtn=document.getElementById("addSites");
-let webnameInput=document.getElementById("webname");
-let urlInput=document.getElementById("url");
-let descriptionInput=document.getElementById("description");
-
-//eventlistener
-window.addEventListener('load', getWork);
-window.addEventListener('load', getStudy);
-window.addEventListener('load', getSites);
-addWorkbtn.addEventListener('click',addWork);
-addStudybtn.addEventListener('click', addStudy);
-addSitesbtn.addEventListener('click', addSites);
-
-
-
-//functions
-function getWork(){
-    workEl.innerHTML='';
-    fetch("http://localhost/dt173g/api/work.php")
-    .then(response => response.json())
-    .then(data => {
-        data.records.forEach(work =>{
-            workEl.innerHTML +=
-            `<div class="work">
-            <div class="col-md-8 mt-3">
-        <table class="table">
-            <thead>
-              <tr>
-                <th scope="col">Arbetsplats</th>
-                <th scope="col">Titel</th>
-                <th scope="col">Startdatum</th>
-                <th scope="col">Stopdatum</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>${work.company}</td>
-                <td>${work.title}</td>
-                <td>${work.startwork}</td>
-                <td>${work.stopwork}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-    </div>
-     `
-           
-        })
-    })
+const renderWork =(works)=>{
+  works.records.forEach(work => {
+    workOutput+=`
+    <div class="card mt-4 col-md-6">
+            <div class="card-body" >
+              <h5 class="card-title">${work.title}</h5>
+              <h6 class="card-subtitle mb-2 text-muted">${work.company}</h6>
+              <p class="card-text">${work.startwork} - ${work.stopwork}</p>
+              <a href="#" class="card-link" id="edit-work" >Ändra</a>
+              <a href="#" class="card-link" id="delete-work" >Radera </a>
+            </div>
+          </div>`
+});
+workList.innerHTML=workOutput;
 }
 
-function deleteWork(id){
-    fetch('http://localhost/dt173g/api/work.php?id='+id, {
-        method:'DELETE',
-    })
-    .then(response=>response.json())
-    .then(data=>{
-        getWork();
-    })
-    .catch(error =>{
-        console.log("Error:", error);
-    })
-}
+//const url ='http://localhost/dt173g/api/work.php';
 
-function addWork(){
-    let company = companyInput.value;
-    let title = titleInput.value;
-    let startwork = startworkInput.value;
-    let stopwork = stopworkInput.value;
-
-    let work = {'company':company, 'title':title, 'startwork':startwork, 'stopwork':stopwork};
-    fetch('http://localhost/dt173g/api/work.php', {
-        method:'POST',
-        body:JSON.stringify(work),
-    })
-    .then(response=>response.json())
-    .then(data=>{
-        getWork();
-    })
-    .catch(error =>{
-        console.log("Error:", error);
-    })
-}
-
-function getStudy(){
-    studyEl.innerHTML='';
-
-    fetch("http://localhost/dt173g/api/study.php")
-    .then(response => response.json())
-    .then(data => {
-        data.records.forEach(study =>{
-            studyEl.innerHTML +=
-            `<div class="study">
-            <p>
-            <b>Lärosäte:</b> ${study.place}
-            </p>
-            <p>
-            <b>Kurs/utbildning:</b> ${study.coursename}
-            </p>
-            <p>
-            <b>Period:</b> ${study.startedu}-${study.stopedu}
-            </p>
-            <button id="${study.id}" onClick="deleteStudy(${study.id})">Radera</button>
-            </div>`
-        })
-    })
-}
+//GET - read works
+//method :GET
+fetch('http://localhost/dt173g/api/work.php')
+.then(res=>res.json())
+.then(data=>renderWork(data))
 
 
-
-function deleteStudy(id){
-    fetch('http://localhost/dt173g/api/study.php?id='+id, {
-        method:"DELETE",
+//create insert new work
+//method:POST
+addWorkForm.addEventListener('submit',(/*e*/)=>{
+  //e.preventDefault();
+  fetch('http://localhost/dt173g/api/work.php',{
+    method:'POST',
+    headers:{
+      'Content-Type':'application/json'
+    },
+    body: JSON.stringify({
+      company: companyValue.value,
+      title: titleValue.value,
+      startwork: startworkValue.value,
+      stopwork: stopworkValue.value,
     })
-    .then(response=>response.json())
-    .then(data=>{
-        getStudy();
-    })
-    .catch(error =>{
-        console.log("Error:", error);
-    })
-}
-
-function addStudy(){
-    let place = placeInput.value;
-    let coursename = coursenameInput.value;
-    let startedu = starteduInput.value;
-    let stopedu = stopeduInput.value;
-
-    let study = {'place':place, 'coursename':coursename, 'startedu':startedu, 'stopedu':stopedu};
-    fetch('http://localhost/dt173g/api/study.php', {
-        method:'POST',
-        body:JSON.stringify(study),
-    })
-    .then(response=>response.json())
-    .then(data=>{
-        getStudy();
-    })
-    .catch(error =>{
-        console.log("Error:", error);
-    })
-}
-
-function getSites(){
-    sitesEl.innerHTML='';
-    fetch("http://localhost/dt173g/api/sites.php")
-    .then(response => response.json())
-    .then(data => {
-        data.records.forEach(sites =>{
-            sitesEl.innerHTML +=
-            `<div class="sites">
-            <p>
-            <b>Webbplats:</b> ${sites.webname}
-            </p>
-            <p>
-            <b>url:</b> ${sites.url}
-            </p>
-            <p>
-            <b>Beskrivning:</b> ${sites.description}
-            </p>
-            <button id="${sites.id}" onClick="deleteSite(${sites.id})">Radera</button>
-            </div>`
-           
-        })
-    })
-}
-
-function deleteSite(id){
-    fetch('http://localhost/dt173g/api/sites.php?id='+id, {
-        method:'DELETE',
-    })
-    .then(response=>response.json())
-    .then(data=>{
-        getSites();
-    })
-    .catch(error =>{
-        console.log("Error:", error);
-    })
-}
-
-function addSites(){
-    let webname = webnameInput.value;
-    let url = urlInput.value;
-    let description = descriptionInput.value;
+  })
+  .then(res => res.json())
+  .then(data=>{
+    const dataArr =[];
+    dataArr.push(data);
     
-
-    let sites = {'webname':webname, 'url':url, 'description':description};
-    fetch('http://localhost/dt173g/api/sites.php', {
-        method:'POST',
-        body:JSON.stringify(sites),
-    })
-    .then(response=>response.json())
-    .then(data=>{
-        getSites();
-    })
-    .catch(error =>{
-        console.log("Error:", error);
-    })
-}
+  })
+})
