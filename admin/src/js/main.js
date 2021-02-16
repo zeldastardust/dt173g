@@ -6,6 +6,8 @@ let workEl = document.getElementById("work");
 let studyEl = document.getElementById("study");
 let sitesEl = document.getElementById("sites");
 
+
+
 let addWorkbtn= document.getElementById("addWork");
 let companyInput= document.getElementById("company"); 
 let titleInput= document.getElementById("title");
@@ -32,8 +34,15 @@ addStudybtn.addEventListener('click', addStudy);
 addSitesbtn.addEventListener('click', addSites);
 
 
+
  
 //functions
+
+function fetchData() {
+    showWork();
+    showEducation();
+    showProjects();
+  }
 function getWork(){
     workEl.innerHTML='';
     fetch("http://localhost/dt173g/api/work.php")
@@ -41,21 +50,27 @@ function getWork(){
     .then(data => {
         data.records.forEach(work =>{
             workEl.innerHTML +=
-            `<div class="card mt-4 col-md-4" >
-            <div class="card-body">
-              <h5 class="card-title">${work.title}</h5>
-              <h6 class="card-subtitle mb-2 text-muted">${work.company}</h6>
-              <p class="card-text">${work.startwork} - ${work.stopwork}</p>
-              <a href="#" class="card-link">Uppdatera</a>
-              <a href="#" id="${work.id}" onClick="deleteWork(${work.id})" class="card-link">Radera</a>
-              
-            </div>
-          </div>
-     `
+            `<tr>
+            <td>${work.company}</td>
+            <td>${work.title}</td>
+            <td>${work.startwork} - ${work.stopwork}</td>
+            <td><a onclick="updateWork(${work.id})" class="update">Uppdatera</a></td>
+            <td><a onclick="deleteWork(${work.id})" class="delete">Radera</a></td>
+          </tr>`;
            
         })
     })
 }
+
+function updateWork(id){
+    fetch('http://localhost/dt173g/api/work.php?id='+id)
+    .then(response=>response.json())
+    .then(data=>{
+        console.log(data);
+        })
+    }
+    
+
 function deleteWork(id){
     fetch('http://localhost/dt173g/api/work.php?id='+id, {
         method:'DELETE',
@@ -88,6 +103,30 @@ function addWork(){
         console.log("Error:", error);
     })
 }
+ 
+function addStudy(){
+
+let place = companyInput.value;
+    let coursename = titleInput.value;
+    let startedu = startworkInput.value;
+    let stopedu = stopworkInput.value;
+
+    let study = {'place':place, 'coursename':coursename, 'startedu':startedu, 'stopedu':stopedu};
+    fetch('http://localhost/dt173g/api/study.php', {
+        method:'POST',
+        body:JSON.stringify(study),
+    })
+    .then(response=>response.json())
+    .then(data=>{
+        getWork();
+    })
+    .catch(error =>{
+        console.log("Error:", error);
+    })
+}
+
+
+ 
 
 function getStudy(){
     studyEl.innerHTML='';
@@ -97,18 +136,13 @@ function getStudy(){
     .then(data => {
         data.records.forEach(study =>{
             studyEl.innerHTML +=
-            `<div class="study">
-            <p>
-            <b>Lärosäte:</b> ${study.place}
-            </p>
-            <p>
-            <b>Kurs/utbildning:</b> ${study.coursename}
-            </p>
-            <p>
-            <b>Period:</b> ${study.startedu}-${study.stopedu}
-            </p>
-            <button id="${study.id}" onClick="deleteStudy(${study.id})">Radera</button>
-            </div>`
+            `<tr>
+            <td>${study.place}</td>
+            <td>${study.coursename}</td>
+            <td>${study.startedu} - ${study.stopedu}</td>
+            <td><a onclick="updateStudy(${study.id})" class="update">Uppdatera</a></td>
+            <td><a onclick="deleteStudy(${study.id})" class="delete">Radera</a></td>
+          </tr>`;
         })
     })
 }
@@ -128,7 +162,7 @@ function deleteStudy(id){
     })
 }
 
-function addStudy(){
+/*function addStudy(){
     let place = placeInput.value;
     let coursename = coursenameInput.value;
     let startedu = starteduInput.value;
@@ -146,7 +180,7 @@ function addStudy(){
     .catch(error =>{
         console.log("Error:", error);
     })
-}
+}*/
 
 function getSites(){
     sitesEl.innerHTML='';
@@ -155,19 +189,17 @@ function getSites(){
     .then(data => {
         data.records.forEach(sites =>{
             sitesEl.innerHTML +=
-            `<div class="sites">
-            <p>
-            <b>Webbplats:</b> ${sites.webname}
-            </p>
-            <p>
-            <b>url:</b> ${sites.url}
-            </p>
-            <p>
-            <b>Beskrivning:</b> ${sites.description}
-            </p>
-            <button id="${sites.id}" onClick="deleteSite(${sites.id})">Radera</button>
-            </div>`
-           
+            `<div class="card mt-4 col-md-4" >
+            <div class="card-body">
+              <h5 class="card-title">${sites.webname}</h5>
+              <h6 class="card-subtitle mb-2 text-muted">${sites.url}</h6>
+              <p class="card-text">${sites.description}</p>
+              <a href="#" class="card-link">Uppdatera</a>
+              <a href="#" id="${sites.id}" onClick="deleteSite(${sites.id})" class="card-link">Radera</a>
+              
+            </div>
+          </div>
+     `
         })
     })
 }
@@ -184,6 +216,8 @@ function deleteSite(id){
         console.log("Error:", error);
     })
 }
+
+
 
 function addSites(){
     let webname = webnameInput.value;
