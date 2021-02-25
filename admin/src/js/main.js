@@ -1,7 +1,10 @@
 "use strict"
 
 //variables
+//////////////////test
 
+let workForm = document.getElementById('work-form');
+////////////////////////test
 let workEl = document.getElementById("work");
 let studyEl = document.getElementById("study");
 let sitesEl = document.getElementById("sites");
@@ -38,11 +41,7 @@ addSitesbtn.addEventListener('click', addSites);
  
 //functions
 
-function fetchData() {
-    showWork();
-    showEducation();
-    showProjects();
-  }
+
 function getWork(){
     workEl.innerHTML='';
     fetch("http://localhost/dt173g/api/work.php")
@@ -61,15 +60,6 @@ function getWork(){
         })
     })
 }
-
-function updateWork(id){
-    fetch('http://localhost/dt173g/api/work.php?id='+id)
-    .then(response=>response.json())
-    .then(data=>{
-        console.log(data);
-        })
-    }
-    
 
 function deleteWork(id){
     fetch('http://localhost/dt173g/api/work.php?id='+id, {
@@ -101,9 +91,56 @@ function addWork(){
     })
     .catch(error =>{
         console.log("Error:", error);
-    })
+    });
 }
- 
+/////////////////////////////////////////////////////////////////////////test
+function updateWork(id) {
+  
+    fetch('http://localhost/dt173g/api/work.php?id='+id)
+      .then(response => response.json())
+      .then(data => {
+        let output = '';
+  
+        data.records.forEach(input => {     
+          output += `
+              <input type="text" class="form-control" id="input-company" placeholder="Arbetsplats" value="${input.company}">
+              </div>
+              <div class="col">
+              <input type="text" class="form-control" id="input-title" placeholder="Titel" value="${input.title}">
+              </div>
+              <div class="col">
+              <input type="date" id="input-date1" class="form-control" placeholder="ÅÅÅÅ-MM - ÅÅÅÅ-MM" value="${input.startwork}">
+              </div>
+              <div class="col">
+              <input type="date" id="input-date2" class="form-control" placeholder="ÅÅÅÅ-MM - ÅÅÅÅ-MM" value="${input.stopwork}">
+              </div>
+              <div class="col">
+              <a id="work-update" onclick="sendWork(${input.id})" class="btn btn-primary"/>Spara</a>`;
+        });
+        workForm.innerHTML = output;
+      });
+  }
+  function sendWork(id) {
+   
+    let inputCompany = document.getElementById('input-company').value;
+    let inputTitle = document.getElementById('input-title').value;
+    let inputDate1 = document.getElementById('input-date1').value;
+    let inputDate2 = document.getElementById('input-date2').value;
+  
+    let work ={'id': id,'company': inputCompany,'title': inputTitle,'startwork': inputDate1,'stopwork': inputDate2};
+   
+    fetch('http://localhost/dt173g/api/work.php', {
+      method: 'PUT',
+      body: JSON.stringify(work)
+    })
+      .then(response => response.json())
+      .then(data => {getWork()
+    })
+      .catch(err => console.log(err));
+  }
+
+
+ //////////////////////////////////////////////////////////////////////////////////////////
 function addStudy(){
 
 let place = companyInput.value;
@@ -124,6 +161,26 @@ let place = companyInput.value;
         console.log("Error:", error);
     })
 }
+function updateStudy(id){
+
+    let place = companyInput.value;
+        let coursename = titleInput.value;
+        let startedu = startworkInput.value;
+        let stopedu = stopworkInput.value;
+    
+        let study = {'place':place, 'coursename':coursename, 'startedu':startedu, 'stopedu':stopedu};
+        fetch('http://localhost/dt173g/api/study.php?id='+id, {
+            method:'PUT',
+            body:JSON.stringify(study),
+        })
+        .then(response=>response.json())
+        .then(data=>{
+            getStudy();
+        })
+        .catch(error =>{
+            console.log("Error:", error);
+        })
+    }
 
 
  
@@ -162,6 +219,7 @@ function deleteStudy(id){
     })
 }
 
+
 /*function addStudy(){
     let place = placeInput.value;
     let coursename = coursenameInput.value;
@@ -189,7 +247,7 @@ function getSites(){
     .then(data => {
         data.records.forEach(sites =>{
             sitesEl.innerHTML +=
-            `<div class="card mt-4 col-md-4" >
+            `<div class="card m-4 col-md-8 " >
             <div class="card-body">
               <h5 class="card-title">${sites.webname}</h5>
               <h6 class="card-subtitle mb-2 text-muted">${sites.url}</h6>
