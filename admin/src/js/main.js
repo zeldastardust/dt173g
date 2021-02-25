@@ -1,10 +1,6 @@
 "use strict"
 
-//variables
-//////////////////test
 
-let workForm = document.getElementById('work-form');
-////////////////////////test
 let workEl = document.getElementById("work");
 let studyEl = document.getElementById("study");
 let sitesEl = document.getElementById("sites");
@@ -93,54 +89,7 @@ function addWork(){
         console.log("Error:", error);
     });
 }
-/////////////////////////////////////////////////////////////////////////test
-function updateWork(id) {
-  
-    fetch('http://localhost/dt173g/api/work.php?id='+id)
-      .then(response => response.json())
-      .then(data => {
-        let output = '';
-  
-        data.records.forEach(input => {     
-          output += `
-              <input type="text" class="form-control" id="input-company" placeholder="Arbetsplats" value="${input.company}">
-              </div>
-              <div class="col">
-              <input type="text" class="form-control" id="input-title" placeholder="Titel" value="${input.title}">
-              </div>
-              <div class="col">
-              <input type="date" id="input-date1" class="form-control" placeholder="ÅÅÅÅ-MM - ÅÅÅÅ-MM" value="${input.startwork}">
-              </div>
-              <div class="col">
-              <input type="date" id="input-date2" class="form-control" placeholder="ÅÅÅÅ-MM - ÅÅÅÅ-MM" value="${input.stopwork}">
-              </div>
-              <div class="col">
-              <a id="work-update" onclick="sendWork(${input.id})" class="btn btn-primary"/>Spara</a>`;
-        });
-        workForm.innerHTML = output;
-      });
-  }
-  function sendWork(id) {
-   
-    let inputCompany = document.getElementById('input-company').value;
-    let inputTitle = document.getElementById('input-title').value;
-    let inputDate1 = document.getElementById('input-date1').value;
-    let inputDate2 = document.getElementById('input-date2').value;
-  
-    let work ={'id': id,'company': inputCompany,'title': inputTitle,'startwork': inputDate1,'stopwork': inputDate2};
-   
-    fetch('http://localhost/dt173g/api/work.php', {
-      method: 'PUT',
-      body: JSON.stringify(work)
-    })
-      .then(response => response.json())
-      .then(data => {getWork()
-    })
-      .catch(err => console.log(err));
-  }
 
-
- //////////////////////////////////////////////////////////////////////////////////////////
 function addStudy(){
 
 let place = companyInput.value;
