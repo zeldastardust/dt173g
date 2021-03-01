@@ -1,0 +1,130 @@
+-- phpMyAdmin SQL Dump
+-- version 5.0.2
+-- https://www.phpmyadmin.net/
+--
+-- Värd: 127.0.0.1
+-- Tid vid skapande: 01 mars 2021 kl 16:28
+-- Serverversion: 10.4.11-MariaDB
+-- PHP-version: 7.4.4
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+--
+-- Databas: `dt173g`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Tabellstruktur `sites`
+--
+
+CREATE TABLE `sites` (
+  `id` int(11) NOT NULL,
+  `webname` text NOT NULL,
+  `url` text NOT NULL,
+  `description` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumpning av Data i tabell `sites`
+--
+
+INSERT INTO `sites` (`id`, `webname`, `url`, `description`) VALUES
+(8, 'loppiosa.se', 'www.loppiosa.se', 'Antik och kuriosa. Loppisen loppiosas webbplats där nyheter, öppettider och produkter visas'),
+(9, 'teaml.se', 'www.teaml.se', 'Tänkt att bli min webbplats. Har hittills använts som utvecklingssida och på en subdomän ligger utvecklingssidan för loppiosa.se'),
+(10, 'skogsbolaget ab', 'http://studenter.miun.se/~mali1910/dt152g/index.html', 'projekt i kursen dt152g på webbutvecklarprogrammet. Ett tema jag skapat själv i wordpress');
+
+-- --------------------------------------------------------
+
+--
+-- Tabellstruktur `study`
+--
+
+CREATE TABLE `study` (
+  `id` int(11) NOT NULL,
+  `place` varchar(255) NOT NULL,
+  `coursename` text NOT NULL,
+  `startedu` date NOT NULL,
+  `stopedu` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumpning av Data i tabell `study`
+--
+
+INSERT INTO `study` (`id`, `place`, `coursename`, `startedu`, `stopedu`) VALUES
+(13, 'Göteborgs socialpsykologiska institut', 'Familjeterapi', '2006-01-01', '2008-06-01'),
+(23, 'Högskolan i Skövde', 'Socialpsykologiskt program', '2000-08-01', '2003-06-10');
+
+-- --------------------------------------------------------
+
+--
+-- Tabellstruktur `work`
+--
+
+CREATE TABLE `work` (
+  `id` int(11) NOT NULL,
+  `company` varchar(255) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `startwork` date NOT NULL,
+  `stopwork` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumpning av Data i tabell `work`
+--
+
+INSERT INTO `work` (`id`, `company`, `title`, `startwork`, `stopwork`) VALUES
+(26, 'Götene Kommun', 'Familjebehandlare', '2012-02-01', '2020-02-01'),
+(27, 'Gryning Vård AB', 'Behandlingssekreterare', '2005-02-19', '2012-01-19'),
+(28, 'Pejas Hus', 'Behanlingsassistent', '2003-01-01', '2005-02-01'),
+(29, 'Skaraborgs sjukhus Div.Psykiatri', 'Skötare', '2002-01-19', '2003-01-01'),
+(31, 'hemmahemma', 'jappjapp', '0000-00-00', '0000-00-00');
+
+--
+-- Index för dumpade tabeller
+--
+
+--
+-- Index för tabell `sites`
+--
+ALTER TABLE `sites`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Index för tabell `study`
+--
+ALTER TABLE `study`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Index för tabell `work`
+--
+ALTER TABLE `work`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- AUTO_INCREMENT för dumpade tabeller
+--
+
+--
+-- AUTO_INCREMENT för tabell `sites`
+--
+ALTER TABLE `sites`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+
+--
+-- AUTO_INCREMENT för tabell `study`
+--
+ALTER TABLE `study`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+
+--
+-- AUTO_INCREMENT för tabell `work`
+--
+ALTER TABLE `work`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+COMMIT;
