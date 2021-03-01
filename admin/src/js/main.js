@@ -173,8 +173,23 @@ function updateStudy(id){
         })
         .then(response=>response.json())
         .then(data=>{
-            getStudy();
-        })
+            //getStudy();
+            //console.log('hej');
+            
+                data.records.forEach(study =>{
+                    updateStudyform.innerHTML +=
+                    `<div class="col">
+                    <input type="text" class="form-control" value="${study.place}"></div>
+                    <div class="col">
+                  <input type="text" class="form-control"  value="${study.coursename}">
+                  </div>
+                  <div class="col">
+                  <input type="date" class="form-control" value="${study.startedu} - ${study.stopedu}">
+                  </div>
+                    `;
+                })
+            })
+        
         .catch(error =>{
             console.log("Error:", error);
         })
