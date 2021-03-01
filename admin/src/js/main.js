@@ -1,9 +1,28 @@
 "use strict"
+/*let urlWork = 'http://studenter.miun.se/~mali1910/dt173g/projekt/api/work.php';
+let urlWorkDel='http://studenter.miun.se/~mali1910/dt173g/projekt/api/work.php?id=';
+
+let urlStudy='http://studenter.miun.se/~mali1910/dt173g/projekt/api/study.php';
+let urlStudyDel ='http://studenter.miun.se/~mali1910/dt173g/projekt/api/study.php?id=';
+
+let urlSites='http://studenter.miun.se/~mali1910/dt173g/projekt/api/sites.php';
+let urlSitesDel ='http://studenter.miun.se/~mali1910/dt173g/projekt/api/sites.php?=id';
+*/
+
+let urlWork = 'http://localhost/dt173g/api/work.php';
+let urlWorkDel = 'http://localhost/dt173g/api/work.php?id=';
+
+let urlStudy  = 'http://localhost/dt173g/api/study.php';
+let urlStudyDel='http://localhost/dt173g/api/study.php?id=';
+
+let urlSites ='http://localhost/dt173g/api/sites.php';
+let urlSitesDel ='http://localhost/dt173g/api/sites.php?id=';
 
 
 let workEl = document.getElementById("work");
 let studyEl = document.getElementById("study");
 let sitesEl = document.getElementById("sites");
+let updateStudyEl=document.getElementById("updateStudy-form");
 
 
 
@@ -18,6 +37,9 @@ let placeInput=document.getElementById("place");
 let coursenameInput=document.getElementById("coursename");
 let starteduInput=document.getElementById("startedu");
 let stopeduInput=document.getElementById("stopedu");
+let updateStudyform = document.getElementById('updateStudy-form');
+
+
 
 let addSitesbtn=document.getElementById("addSites");
 let webnameInput=document.getElementById("webname");
@@ -31,16 +53,22 @@ window.addEventListener('load', getSites);
 addWorkbtn.addEventListener('click',addWork);
 addStudybtn.addEventListener('click', addStudy);
 addSitesbtn.addEventListener('click', addSites);
+//document.getElementById('getStudybyidbtn').addEventListener('click',  getStudybyID(id));
 
 
 
  
 //functions
+function fetchData() {
+    getWork();
+   getStudy();
+    getSites();
+  }
 
 
 function getWork(){
     workEl.innerHTML='';
-    fetch("http://localhost/dt173g/api/work.php")
+    fetch(urlWork)
     .then(response => response.json())
     .then(data => {
         data.records.forEach(work =>{
@@ -58,7 +86,7 @@ function getWork(){
 }
 
 function deleteWork(id){
-    fetch('http://localhost/dt173g/api/work.php?id='+id, {
+    fetch(urlWorkDel+id, {
         method:'DELETE',
     })
     .then(response=>response.json())
@@ -77,7 +105,7 @@ function addWork(){
     let stopwork = stopworkInput.value;
 
     let work = {'company':company, 'title':title, 'startwork':startwork, 'stopwork':stopwork};
-    fetch('http://localhost/dt173g/api/work.php', {
+    fetch(urlWork, {
         method:'POST',
         body:JSON.stringify(work),
     })
@@ -92,13 +120,13 @@ function addWork(){
 
 function addStudy(){
 
-let place = companyInput.value;
+    let place = companyInput.value;
     let coursename = titleInput.value;
     let startedu = startworkInput.value;
     let stopedu = stopworkInput.value;
 
     let study = {'place':place, 'coursename':coursename, 'startedu':startedu, 'stopedu':stopedu};
-    fetch('http://localhost/dt173g/api/study.php', {
+    fetch(urlStudy, {
         method:'POST',
         body:JSON.stringify(study),
     })
@@ -110,34 +138,11 @@ let place = companyInput.value;
         console.log("Error:", error);
     })
 }
-function updateStudy(id){
-
-    let place = companyInput.value;
-        let coursename = titleInput.value;
-        let startedu = startworkInput.value;
-        let stopedu = stopworkInput.value;
-    
-        let study = {'place':place, 'coursename':coursename, 'startedu':startedu, 'stopedu':stopedu};
-        fetch('http://localhost/dt173g/api/study.php?id='+id, {
-            method:'PUT',
-            body:JSON.stringify(study),
-        })
-        .then(response=>response.json())
-        .then(data=>{
-            getStudy();
-        })
-        .catch(error =>{
-            console.log("Error:", error);
-        })
-    }
-
-
- 
 
 function getStudy(){
     studyEl.innerHTML='';
 
-    fetch("http://localhost/dt173g/api/study.php")
+    fetch(urlStudy)
     .then(response => response.json())
     .then(data => {
         data.records.forEach(study =>{
@@ -154,9 +159,32 @@ function getStudy(){
 }
 
 
+function updateStudy(id){
+
+    let place = companyInput.value;
+        let coursename = titleInput.value;
+        let startedu = startworkInput.value;
+        let stopedu = stopworkInput.value;
+    
+        let study = {'place':place, 'coursename':coursename, 'startedu':startedu, 'stopedu':stopedu, 'id':id};
+        fetch('http://localhost/dt173g/api/study.php?id='+id, {
+            method:'PUT',
+            body:JSON.stringify(study),
+        })
+        .then(response=>response.json())
+        .then(data=>{
+            getStudy();
+        })
+        .catch(error =>{
+            console.log("Error:", error);
+        })
+    }
+
+
+
 
 function deleteStudy(id){
-    fetch('http://localhost/dt173g/api/study.php?id='+id, {
+    fetch(urlStudyDel+id, {
         method:"DELETE",
     })
     .then(response=>response.json())
@@ -169,29 +197,10 @@ function deleteStudy(id){
 }
 
 
-/*function addStudy(){
-    let place = placeInput.value;
-    let coursename = coursenameInput.value;
-    let startedu = starteduInput.value;
-    let stopedu = stopeduInput.value;
-
-    let study = {'place':place, 'coursename':coursename, 'startedu':startedu, 'stopedu':stopedu};
-    fetch('http://localhost/dt173g/api/study.php', {
-        method:'POST',
-        body:JSON.stringify(study),
-    })
-    .then(response=>response.json())
-    .then(data=>{
-        getStudy();
-    })
-    .catch(error =>{
-        console.log("Error:", error);
-    })
-}*/
 
 function getSites(){
     sitesEl.innerHTML='';
-    fetch("http://localhost/dt173g/api/sites.php")
+    fetch(urlSites)
     .then(response => response.json())
     .then(data => {
         data.records.forEach(sites =>{
@@ -201,8 +210,9 @@ function getSites(){
               <h5 class="card-title">${sites.webname}</h5>
               <h6 class="card-subtitle mb-2 text-muted">${sites.url}</h6>
               <p class="card-text">${sites.description}</p>
-              <a href="#" class="card-link">Uppdatera</a>
-              <a href="#" id="${sites.id}" onClick="deleteSite(${sites.id})" class="card-link">Radera</a>
+              <a onclick="updateSite(${sites.id})" class="update">Uppdatera</a>
+              <a onclick="deleteSite(${sites.id})" class="delete">Radera</a></td>
+              
               
             </div>
           </div>
@@ -212,7 +222,7 @@ function getSites(){
 }
 
 function deleteSite(id){
-    fetch('http://localhost/dt173g/api/sites.php?id='+id, {
+    fetch(urlSitesDel+id, {
         method:'DELETE',
     })
     .then(response=>response.json())
@@ -233,7 +243,7 @@ function addSites(){
     
 
     let sites = {'webname':webname, 'url':url, 'description':description};
-    fetch('http://localhost/dt173g/api/sites.php', {
+    fetch(urlSites, {
         method:'POST',
         body:JSON.stringify(sites),
     })

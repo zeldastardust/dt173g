@@ -1,12 +1,19 @@
 <?php
 class Database{
   
-    // specify your own database credentials
+    //specify your own database credentials
     private $host = "localhost";
     private $db_name = "dt173g";
     private $username = "dt173g";
     private $password = "password";
     public $conn;
+
+    /*
+    private $host ="studentmysql.miun.se";
+    private $db_name="mali1910";
+    private $username="mali1910";
+    private $password="18xu8adm";
+    public $conn;*/
   
     // get the database connection
     public function getConnection(){
