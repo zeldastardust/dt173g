@@ -31,9 +31,34 @@ class Study{
   
     // execute query
     $stmt->execute();
+    $num = $stmt->rowCount();
   
-    return $stmt;
-}
+    // check if more than 0 record found
+    if ($num > 0) {
+        //array study objects
+      $data = array();
+       $data['studylist'] = array();
+      // $data['itemCount'] = $num;
+
+       // retrieve the table contents
+       while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+          // extract data from row to variables
+          extract($row); 
+          $study = array(
+             'id' => $id,
+             'place' => $place,
+             'coursename' => $coursename,
+             'startedu' => $startedu,
+             'stopedu' => $stopedu
+          );
+
+          array_push($data['studylist'], $study);
+       }
+    }
+
+    return $data;
+ }
+
 // create studies
 function create(){
   
@@ -71,7 +96,7 @@ function create(){
 
 function readOne($id){
   
-    // query to read single record
+    // query to read single object
     $query = "SELECT
                 *
             FROM
@@ -84,23 +109,22 @@ function readOne($id){
     // prepare query statement
     $stmt = $this->conn->prepare( $query );
   
-    // bind id of studies to be updated
-    $stmt->bindParam(1, $this->id);
-  
     // execute query
     $stmt->execute();
   
     // get retrieved row
-    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    $data = $stmt->fetch(PDO::FETCH_ASSOC);
   
-    // set values to object properties
-    $this->place = $row['place'];
-    $this->coursename = $row['coursename'];
-    $this->startedu = $row['startedu'];
-    $this->stopedu = $row['stopedu'];
-}
-// update the study
-function update(){
+    if(!$data) {
+        $data = array();
+     }
+
+     return $data;
+
+  }
+
+// update study function
+function update($id){
   
     // update query
     $query = "UPDATE
@@ -121,7 +145,7 @@ function update(){
     $this->coursename=htmlspecialchars(strip_tags($this->coursename));
     $this->startedu=htmlspecialchars(strip_tags($this->startedu));
     $this->stopedu=htmlspecialchars(strip_tags($this->stopedu));
-    $this->id=htmlspecialchars(strip_tags($this->id));
+    $this->id=htmlspecialchars(strip_tags($id));
   
     // bind new values
     $stmt->bindParam(':place', $this->place);
@@ -138,19 +162,19 @@ function update(){
     return false;
 }
 // delete the study
-function delete(){
+function delete($id){
   
     // delete query
-    $query = "DELETE FROM " . $this->table_name . " WHERE id = ?";
+    $query = "DELETE FROM " . $this->table_name . " WHERE id = :id";
   
     // prepare query
     $stmt = $this->conn->prepare($query);
   
     // sanitize
-    $this->id=htmlspecialchars(strip_tags($this->id));
+    $this->id=htmlspecialchars(strip_tags($id));
   
     // bind id of record to delete
-    $stmt->bindParam(1, $this->id);
+    $stmt->bindParam(':id', $this->id);
   
     // execute query
     if($stmt->execute()){

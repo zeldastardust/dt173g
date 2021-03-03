@@ -29,9 +29,33 @@ class Sites{
   
     // execute query
     $stmt->execute();
+    $num = $stmt->rowCount();
   
-    return $stmt;
-}
+    // check if more than 0 record found
+    if ($num > 0) {
+        //array site objects
+      $data = array();
+       $data['sitelist'] = array();
+      // $data['itemCount'] = $num;
+
+       // retrieve the table contents
+       while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+          // extract data from row to variables
+          extract($row); 
+          $site = array(
+             'id' => $id,
+             'webname' => $webname,
+             'url' => $url,
+             'description' => $description
+             
+          );
+
+          array_push($data['sitelist'], $site);
+       }
+    }
+
+    return $data;
+ }
 // create sites
 function create(){
   
@@ -75,23 +99,22 @@ function readOne($id){
     // prepare query statement
     $stmt = $this->conn->prepare( $query );
   
-    // bind id of sites to be updated
-    $stmt->bindParam(1, $this->id);
   
     // execute query
     $stmt->execute();
   
     // get retrieved row
-    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    $data = $stmt->fetch(PDO::FETCH_ASSOC);
   
-    // set values to object properties
-    $this->webname = $row['webname'];
-    $this->url = $row['url'];
-    $this->description = $row['description'];
-    
-}
-// update the site
-function update(){
+    if(!$data) {
+        $data = array();
+     }
+
+     return $data;
+
+  }
+// update site function
+function update($id){
   
     // update query
     $query = "UPDATE
@@ -111,7 +134,7 @@ function update(){
     $this->webname=htmlspecialchars(strip_tags($this->webname));
     $this->url=htmlspecialchars(strip_tags($this->url));
     $this->description=htmlspecialchars(strip_tags($this->description));
-    $this->id=htmlspecialchars(strip_tags($this->id));
+    $this->id=htmlspecialchars(strip_tags($id));
   
     // bind new values
     $stmt->bindParam(':webname', $this->webname);
@@ -127,20 +150,19 @@ function update(){
     return false;
 }
 // delete the site
-function delete(){
+function delete($id){
   
     // delete query
-    $query = "DELETE FROM " . $this->table_name . " WHERE id = ?";
+    $query = "DELETE FROM " . $this->table_name . " WHERE id =:id";
   
     // prepare query
     $stmt = $this->conn->prepare($query);
   
     // sanitize
-    $this->id=htmlspecialchars(strip_tags($this->id));
+    $this->id=htmlspecialchars(strip_tags($id));
   
     // bind id of record to delete
-    $stmt->bindParam(1, $this->id);
-  
+    $stmt->bindParam(':id', $this->id);
     // execute query
     if($stmt->execute()){
         return true;

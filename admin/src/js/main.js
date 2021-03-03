@@ -23,6 +23,7 @@ let workEl = document.getElementById("work");
 let studyEl = document.getElementById("study");
 let sitesEl = document.getElementById("sites");
 let updateStudyEl=document.getElementById("updateStudy-form");
+let updateWorkEl=document.getElementById(" updateWork-form")
 
 
 
@@ -71,7 +72,7 @@ function getWork(){
     fetch(urlWork)
     .then(response => response.json())
     .then(data => {
-        data.records.forEach(work =>{
+        data.worklist.forEach(work =>{
             workEl.innerHTML +=
             `<tr>
             <td>${work.company}</td>
@@ -84,6 +85,43 @@ function getWork(){
         })
     })
 }
+
+function updateWork(id){
+
+    let company = companyInput.value;
+        let title = titleInput.value;
+        let startwork = startworkInput.value;
+        let stopwork = stopworkInput.value;
+    
+        let work = {'company':company, 'title':title, 'startwork':startwork, 'stopwork':stopwork, 'id':id};
+        fetch('http://localhost/dt173g/api/work.php?id='+id, {
+            method:'PUT',
+            body:JSON.stringify(work),
+        })
+        .then(response=>response.json())
+        .then(data=>{
+           console.log(work);
+           console.log(data);
+            
+               /* data.records.forEach(work =>{
+                    updateWorkEl.innerHTML +=
+                    `<div class="col">
+                    <input type="text" class="form-control" value="${study.place}"></div>
+                    <div class="col">
+                  <input type="text" class="form-control"  value="${study.coursename}">
+                  </div>
+                  <div class="col">
+                  <input type="date" class="form-control" value="${study.startedu} - ${study.stopedu}">
+                  </div>
+                    `;
+                })*/
+            })
+        
+        .catch(error =>{
+            console.log("Error:", error);
+        })
+    }
+
 
 function deleteWork(id){
     fetch(urlWorkDel+id, {
@@ -145,7 +183,7 @@ function getStudy(){
     fetch(urlStudy)
     .then(response => response.json())
     .then(data => {
-        data.records.forEach(study =>{
+        data.studylist.forEach(study =>{
             studyEl.innerHTML +=
             `<tr>
             <td>${study.place}</td>
@@ -159,6 +197,26 @@ function getStudy(){
 }
 
 
+
+/*function updateStudy(id){
+    fetch (urlStudyDel+32,{
+        method: 'PUT',
+        body: JSON.stringify({
+            id:study.id,
+            place:study.place,
+            coursename:study.coursename,
+            startedu:study.startedu,
+            stopedu:study.stopedu
+        }),
+        headers:{
+            "Content-type":"application/json; charset=UTF-8"
+        }
+    })
+    .then(response => response.json())
+    .then(json =>console.log(json))
+    
+}*/
+
 function updateStudy(id){
 
     let place = companyInput.value;
@@ -170,14 +228,17 @@ function updateStudy(id){
         fetch('http://localhost/dt173g/api/study.php?id='+id, {
             method:'PUT',
             body:JSON.stringify(study),
+           
         })
         .then(response=>response.json())
         .then(data=>{
             //getStudy();
             //console.log('hej');
-            
-                data.records.forEach(study =>{
-                    updateStudyform.innerHTML +=
+            console.log(study);
+            //onsole.log(data);
+               /* data.records.forEach(study =>{
+                    console.log('data');
+                    updateStudyEl.innerHTML +=
                     `<div class="col">
                     <input type="text" class="form-control" value="${study.place}"></div>
                     <div class="col">
@@ -187,13 +248,14 @@ function updateStudy(id){
                   <input type="date" class="form-control" value="${study.startedu} - ${study.stopedu}">
                   </div>
                     `;
-                })
+                })*/
             })
         
         .catch(error =>{
             console.log("Error:", error);
         })
     }
+
 
 
 
@@ -218,7 +280,7 @@ function getSites(){
     fetch(urlSites)
     .then(response => response.json())
     .then(data => {
-        data.records.forEach(sites =>{
+        data.sitelist.forEach(sites =>{
             sitesEl.innerHTML +=
             `<div class="card m-4 col-md-8 " >
             <div class="card-body">
