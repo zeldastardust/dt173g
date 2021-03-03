@@ -1,31 +1,20 @@
 "use strict"
 /*let urlWork = 'http://studenter.miun.se/~mali1910/dt173g/projekt/api/work.php';
-let urlWorkDel='http://studenter.miun.se/~mali1910/dt173g/projekt/api/work.php?id=';
-
 let urlStudy='http://studenter.miun.se/~mali1910/dt173g/projekt/api/study.php';
-let urlStudyDel ='http://studenter.miun.se/~mali1910/dt173g/projekt/api/study.php?id=';
-
 let urlSites='http://studenter.miun.se/~mali1910/dt173g/projekt/api/sites.php';
-let urlSitesDel ='http://studenter.miun.se/~mali1910/dt173g/projekt/api/sites.php?=id';
 */
 
 let urlWork = 'http://localhost/dt173g/api/work.php';
-let urlWorkDel = 'http://localhost/dt173g/api/work.php?id=';
-
 let urlStudy  = 'http://localhost/dt173g/api/study.php';
-let urlStudyDel='http://localhost/dt173g/api/study.php?id=';
-
 let urlSites ='http://localhost/dt173g/api/sites.php';
-let urlSitesDel ='http://localhost/dt173g/api/sites.php?id=';
+
 
 
 let workEl = document.getElementById("work");
 let studyEl = document.getElementById("study");
 let sitesEl = document.getElementById("sites");
 let updateStudyEl=document.getElementById("updateStudy-form");
-let updateWorkEl=document.getElementById(" updateWork-form")
-
-
+let updateWorkEl=document.getElementById(" updateWork-form");
 
 let addWorkbtn= document.getElementById("addWork");
 let companyInput= document.getElementById("company"); 
@@ -40,12 +29,16 @@ let starteduInput=document.getElementById("startedu");
 let stopeduInput=document.getElementById("stopedu");
 let updateStudyform = document.getElementById('updateStudy-form');
 
-
-
 let addSitesbtn=document.getElementById("addSites");
 let webnameInput=document.getElementById("webname");
 let urlInput=document.getElementById("url");
 let descriptionInput=document.getElementById("description");
+
+let updatePlaceInput=document.getElementById("updatePlace");
+let updateCourseInput=document.getElementById("updateCourse");
+let updateStarteduInput=document.getElementById("updateStartedu");
+let updateStopeduInput=document.getElementById("updateStopedu");
+
 
 //eventlistener
 window.addEventListener('load', getWork);
@@ -56,9 +49,6 @@ addStudybtn.addEventListener('click', addStudy);
 addSitesbtn.addEventListener('click', addSites);
 //document.getElementById('getStudybyidbtn').addEventListener('click',  getStudybyID(id));
 
-
-
- 
 //functions
 function fetchData() {
     getWork();
@@ -86,45 +76,8 @@ function getWork(){
     })
 }
 
-function updateWork(id){
-
-    let company = companyInput.value;
-        let title = titleInput.value;
-        let startwork = startworkInput.value;
-        let stopwork = stopworkInput.value;
-    
-        let work = {'company':company, 'title':title, 'startwork':startwork, 'stopwork':stopwork, 'id':id};
-        fetch('http://localhost/dt173g/api/work.php?id='+id, {
-            method:'PUT',
-            body:JSON.stringify(work),
-        })
-        .then(response=>response.json())
-        .then(data=>{
-           console.log(work);
-           console.log(data);
-            
-               /* data.records.forEach(work =>{
-                    updateWorkEl.innerHTML +=
-                    `<div class="col">
-                    <input type="text" class="form-control" value="${study.place}"></div>
-                    <div class="col">
-                  <input type="text" class="form-control"  value="${study.coursename}">
-                  </div>
-                  <div class="col">
-                  <input type="date" class="form-control" value="${study.startedu} - ${study.stopedu}">
-                  </div>
-                    `;
-                })*/
-            })
-        
-        .catch(error =>{
-            console.log("Error:", error);
-        })
-    }
-
-
 function deleteWork(id){
-    fetch(urlWorkDel+id, {
+    fetch(`${urlWork}?id=${id}`, {
         method:'DELETE',
     })
     .then(response=>response.json())
@@ -196,72 +149,62 @@ function getStudy(){
     })
 }
 
-
-
-/*function updateStudy(id){
-    fetch (urlStudyDel+32,{
-        method: 'PUT',
-        body: JSON.stringify({
-            id:study.id,
-            place:study.place,
-            coursename:study.coursename,
-            startedu:study.startedu,
-            stopedu:study.stopedu
-        }),
-        headers:{
-            "Content-type":"application/json; charset=UTF-8"
-        }
-    })
-    .then(response => response.json())
-    .then(json =>console.log(json))
-    
-}*/
-
 function updateStudy(id){
+    //läser in data utifrån id från apiet
+    fetch(`${urlStudy}?id=${id}`)
+    //gör om responsen till json 
+    .then(response => response.json())
+    //data=json objektet
+    .then(data => {
+        //console.log(data);
+        let output ='';
 
-    let place = companyInput.value;
-        let coursename = titleInput.value;
-        let startedu = startworkInput.value;
-        let stopedu = stopworkInput.value;
+    //här vill jag att ett formulär blir synligt där det aktuella objektet är ifyllt
+        data.studylist.forEach(study =>{
+            output += `
+            <div class="col">
+            <input type="text" class="form-control" id="updatePlace" placeholder="Läroverk" value="${study.place}">
+            </div>
+            <div class="col">
+            <input type="text" class="form-control" id="updateCourse" placeholder="Kurs/utbildning" value="${study.coursename}">
+            </div>
+            <div class="col">
+            <input type="date" id="updateStartedu" class="form-control" placeholder="ÅÅÅÅ-MM-DD" value="${study.startedu}">
+            </div>
+            <div class="col">
+            <input type="date" id="updateStopedu" class="form-control" placeholder="ÅÅÅÅ-MM -DD" value="${study.stopedu}">
+            </div>
+            <a id="updatebtn" onclick="sendStudyupd(${study.id})" class="btn btn-primary"/>Spara</a>`;
+
+      });
+      updateStudyEl.innerHTML = output;
+    });
+}
+//här skickas ett put request när formuläret är ifyllt
+function sendStudyupd(id){
+
+        let place = updatePlaceInput.value;
+        let coursename = updateCourseInput.value;
+        let startedu = updateStarteduInput.value;
+        let stopedu = updateStopeduInput.value;
     
         let study = {'place':place, 'coursename':coursename, 'startedu':startedu, 'stopedu':stopedu, 'id':id};
-        fetch('http://localhost/dt173g/api/study.php?id='+id, {
+        
+        fetch(`${urlStudy}?id=${id}`, {
             method:'PUT',
             body:JSON.stringify(study),
-           
         })
         .then(response=>response.json())
         .then(data=>{
-            //getStudy();
-            //console.log('hej');
-            console.log(study);
-            //onsole.log(data);
-               /* data.records.forEach(study =>{
-                    console.log('data');
-                    updateStudyEl.innerHTML +=
-                    `<div class="col">
-                    <input type="text" class="form-control" value="${study.place}"></div>
-                    <div class="col">
-                  <input type="text" class="form-control"  value="${study.coursename}">
-                  </div>
-                  <div class="col">
-                  <input type="date" class="form-control" value="${study.startedu} - ${study.stopedu}">
-                  </div>
-                    `;
-                })*/
-            })
-        
+            getStudy();
+                })        
         .catch(error =>{
             console.log("Error:", error);
         })
     }
-
-
-
-
-
+    
 function deleteStudy(id){
-    fetch(urlStudyDel+id, {
+    fetch(`${urlStudy}?id=${id}`, {
         method:"DELETE",
     })
     .then(response=>response.json())
@@ -299,7 +242,7 @@ function getSites(){
 }
 
 function deleteSite(id){
-    fetch(urlSitesDel+id, {
+    fetch(`${urlSites}?id=${id}`, {
         method:'DELETE',
     })
     .then(response=>response.json())
