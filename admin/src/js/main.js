@@ -13,7 +13,7 @@ let urlSites ='http://localhost/dt173g/api/sites.php';
 let workEl = document.getElementById("work");
 let studyEl = document.getElementById("study");
 let sitesEl = document.getElementById("sites");
-let updateStudyEl=document.getElementById("updateStudy-form");
+
 let updateWorkEl=document.getElementById(" updateWork-form");
 
 let addWorkbtn= document.getElementById("addWork");
@@ -142,67 +142,53 @@ function getStudy(){
             <td>${study.place}</td>
             <td>${study.coursename}</td>
             <td>${study.startedu} - ${study.stopedu}</td>
-            <td><a onclick="updateStudy(${study.id})" class="update">Uppdatera</a></td>
+            <td><a onclick="getStudybyId(${study.id})" class="update">Uppdatera</a></td>
             <td><a onclick="deleteStudy(${study.id})" class="delete">Radera</a></td>
           </tr>`;
         })
     })
 }
+///////////////////////////////////////////////////////////////////////////////////////////////////
 
-function updateStudy(id){
-    //läser in data utifrån id från apiet
+let updateStudyEl=document.getElementById("updateStudy-form");
+function getStudybyId(id){
     fetch(`${urlStudy}?id=${id}`)
-    //gör om responsen till json 
     .then(response => response.json())
-    //data=json objektet
+    .then(updateStudyEl.style.display = 'block')
     .then(data => {
-        //console.log(data);
-        let output ='';
-
-    //här vill jag att ett formulär blir synligt där det aktuella objektet är ifyllt
-        data.studylist.forEach(study =>{
-            output += `
-            <div class="col">
-            <input type="text" class="form-control" id="updatePlace" placeholder="Läroverk" value="${study.place}">
-            </div>
-            <div class="col">
-            <input type="text" class="form-control" id="updateCourse" placeholder="Kurs/utbildning" value="${study.coursename}">
-            </div>
-            <div class="col">
-            <input type="date" id="updateStartedu" class="form-control" placeholder="ÅÅÅÅ-MM-DD" value="${study.startedu}">
-            </div>
-            <div class="col">
-            <input type="date" id="updateStopedu" class="form-control" placeholder="ÅÅÅÅ-MM -DD" value="${study.stopedu}">
-            </div>
-            <a id="updatebtn" onclick="sendStudyupd(${study.id})" class="btn btn-primary"/>Spara</a>`;
-
-      });
-      updateStudyEl.innerHTML = output;
-    });
+        updateStudyEl.innerHTML +=
+            `<form method="get">
+            <h3>Uppdatera studier</h3> <br>
+            <label for="place">Lärosäte</label>
+            <input type="text" name="place" id="updplace" value="${data.place}"> <br>
+            <label for="coursename">Kurs/program</label>
+            <input type="text" name="coursename" id="updcoursename" value="${data.coursename}"> <br>
+            <label for="start">Startdatum</label>
+            <input type="date" name="startedu" id="updstartedu" value="${data.startedu}"> <br>
+            <label for="stop">Slutdatum</label>
+            <input type="date" name="stopedu" id="updstopedu" value="${data.stopedu}"> <br>
+            <input type="submit" id="updateBtn" onClick="updateStudy(${data.id})" value="Uppdatera"> <br>      
+            </form>`     
+    })
 }
-//här skickas ett put request när formuläret är ifyllt
-function sendStudyupd(id){
 
-        let place = updatePlaceInput.value;
-        let coursename = updateCourseInput.value;
-        let startedu = updateStarteduInput.value;
-        let stopedu = updateStopeduInput.value;
-    
-        let study = {'place':place, 'coursename':coursename, 'startedu':startedu, 'stopedu':stopedu, 'id':id};
-        
-        fetch(`${urlStudy}?id=${id}`, {
-            method:'PUT',
-            body:JSON.stringify(study),
-        })
-        .then(response=>response.json())
-        .then(data=>{
-            getStudy();
-                })        
-        .catch(error =>{
-            console.log("Error:", error);
-        })
-    }
-    
+/*function getStudybyId(id){
+fetch(`${urlStudy}?id=${id}`)
+.then((response)=>response.json())
+.then((data) =>{
+    console.log(data);
+    data.studylist.forEach((element)=>{
+        updateStudyEl.innerHTML=
+        companyInput.value = `${element.place}`;
+        titleInput.value = `${element.coursename}`;
+        startworkInput.value = `${element.startedu}`;
+        stopworkInput.value = `${element.startedu}`;
+    });
+})
+}*/
+
+
+//////////////////////////////////////////////////////////////
 function deleteStudy(id){
     fetch(`${urlStudy}?id=${id}`, {
         method:"DELETE",
