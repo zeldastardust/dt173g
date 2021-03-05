@@ -17,10 +17,9 @@ include_once("includes/header.php");?>
             <tbody id="work">
             </tbody>       
           </table>
-    
-          <form class="form-inline" id="study-form">
-    
-          </form>
+          <div class="m-5">
+          <div id="updateWork-form"></div>
+          </div>
         </section><!--end of worksection-->
     
         <section id="studysektion" class="m-5">
@@ -38,13 +37,17 @@ include_once("includes/header.php");?>
             <tbody id="study">
             </tbody> 
           </table>
+          <div class="m-5">
+          <div id="updateStudy-form"></div>
+          </div>
         </section><!--end of studysection-->
+        
     
      <div class="m-5">
             <div class="col-md-6 p-5">
             <h2>Lägg till erfarenhet</h2>
             <form class="addWorkform">
-            <div id="updateStudy-form"></div>
+           
                 <div class="form-group">
                 <label for="company">Arbetsplats/Lärosäte</label>
                 <input type="text" class="form-control" name="company" id="company">
@@ -66,15 +69,15 @@ include_once("includes/header.php");?>
             </form>
         </div>
         </div>
-        <form class="form-inline" id="updateWork-form"> 
-    
-        </form>
       
         <div class="m-5">      
     <section id="sitessection">
       <h2 class="m-3">Webbplatser</h2>
         <div id="sites" ></div>
-      </section><!--end of sitessection-->
+        <div class="m-5">
+          <div id="updateSite-form"></div>
+          </div>
+              
         </div>
     
       <div class="m-5">
@@ -97,8 +100,8 @@ include_once("includes/header.php");?>
             </form>
         </div>
         </div>
-    
-    
+        
+        </section><!--end of sitessection-->
     
     
     
