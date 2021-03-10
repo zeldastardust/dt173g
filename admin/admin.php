@@ -44,10 +44,9 @@ include_once("includes/header.php");?>
         
     
      <div class="m-5">
-            <div class="col-md-6 p-5">
+            <div >
             <h2>Lägg till erfarenhet</h2>
             <form class="addWorkform">
-           
                 <div class="form-group">
                 <label for="company">Arbetsplats/Lärosäte</label>
                 <input type="text" class="form-control" name="company" id="company">
@@ -81,7 +80,7 @@ include_once("includes/header.php");?>
         </div>
     
       <div class="m-5">
-            <div class="col-md-6 p-5">
+            <div >
             <h2>Lägg till webbplats</h2>
             <form class="addSitesform">
                 <div class="form-group">

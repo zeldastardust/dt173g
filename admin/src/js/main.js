@@ -1,12 +1,12 @@
 "use strict"
 /*let urlWork = 'http://studenter.miun.se/~mali1910/dt173g/projekt/api/work.php';
 let urlStudy='http://studenter.miun.se/~mali1910/dt173g/projekt/api/study.php';
-let urlSites='http://studenter.miun.se/~mali1910/dt173g/projekt/api/sites.php';
-*/
+let urlSites='http://studenter.miun.se/~mali1910/dt173g/projekt/api/sites.php';*/
 
-let urlWork = 'http://localhost/dt173g/api/work.php';
-let urlStudy  = 'http://localhost/dt173g/api/study.php';
-let urlSites ='http://localhost/dt173g/api/sites.php';
+
+let urlWork = 'http://localhost/dt173g/api/work.php'; //variabel för anrop till work api
+let urlStudy  = 'http://localhost/dt173g/api/study.php';//variabel för anrop till study api
+let urlSites ='http://localhost/dt173g/api/sites.php';//variabel för anrop till sites api
 
 
 
@@ -51,13 +51,6 @@ addWorkbtn.addEventListener('click',addWork);
 addStudybtn.addEventListener('click', addStudy);
 addSitesbtn.addEventListener('click', addSites);
 
-
-//functions
-function fetchData() {
-    getWork();
-   getStudy();
-    getSites();
-  }
 
 //functions for work objects
 function getWork(){
@@ -173,7 +166,7 @@ function addStudy(){
     })
     .then(response=>response.json())
     .then(data=>{
-        getWork();
+        getStudy();
     })
     .catch(error =>{
         console.log("Error:", error);
@@ -182,10 +175,10 @@ function addStudy(){
 
 function getStudy(){
     studyEl.innerHTML='';
-
     fetch(urlStudy)
     .then(response => response.json())
     .then(data => {
+        
         data.studylist.forEach(study =>{
             studyEl.innerHTML +=
             `<tr>

@@ -1,4 +1,15 @@
 <?php
+
+//Work-----------------------------------------------------------------------------------------
+//id(int, AI, primary key)|company(varchar255)|title(varchar255)|startwork(date)|stopwork(date)
+//---------------------------------------------------------------------------------------------
+//Study----------------------------------------------------------------------------------------
+//id(int, AI, primary key)|place(varchar255)|coursename(varchar255)|startedu(date)|stopedu(date)
+//----------------------------------------------------------------------------------------------
+//Sites-----------------------------------------------------------------------------------------
+//id(int, AI, primary key)|webname(text)|url(text)|description(text)
+//----------------------------------------------------------------------------------------------
+
 class Database{
   
     //specify your own database credentials
@@ -8,8 +19,8 @@ class Database{
     private $password = "password";
     public $conn;
 
-    /*
-    private $host ="studentmysql.miun.se";
+    
+    /*private $host ="studentmysql.miun.se";
     private $db_name="mali1910";
     private $username="mali1910";
     private $password="18xu8adm";
